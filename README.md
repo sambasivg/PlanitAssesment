@@ -19,6 +19,8 @@ npm run test:assessment:repeat
 
 The repeat command runs only TC2 five sequential times. Set `PLANIT_BASE_URL` to use a different application environment; the default is `https://jupiter.cloud.planittesting.com`.
 
+Assessment inputs are centralized in `Testdata/JupiterCartTestdata.json` and injected into specs through the typed custom fixture in `tests/fixtures/assessment.fixture.ts`.
+
 Open the generated HTML report with `npm run test:report`.
 
 ## Assessment Coverage

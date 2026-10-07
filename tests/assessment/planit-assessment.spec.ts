@@ -1,10 +1,13 @@
-import { expect, test } from '@playwright/test';
+import { expect, test } from '../fixtures/assessment.fixture';
 import { JupiterCartPage } from '../../src/pages/JupiterCartPage';
 import { JupiterContactPage } from '../../src/pages/JupiterContactPage';
 import { JupiterHomePage } from '../../src/pages/JupiterHomePage';
 import { JupiterShopPage } from '../../src/pages/JupiterShopPage';
 
-test('TC1 - required contact errors clear when mandatory fields are populated', async ({ page }) => {
+test('TC1 - required contact errors clear when mandatory fields are populated', async ({
+  page,
+  assessmentData,
+}) => {
   const homePage = new JupiterHomePage(page);
   await homePage.goto();
   await homePage.openContactPage();
@@ -12,23 +15,25 @@ test('TC1 - required contact errors clear when mandatory fields are populated', 
   const contactPage = new JupiterContactPage(page);
   await contactPage.submit();
 
-  for (const field of ['Forename', 'Email', 'Message'] as const) {
+  for (const field of assessmentData.contact.requiredFields) {
     await expect(contactPage.requiredError(field)).toBeVisible();
   }
 
   await contactPage.fillMandatoryFields(
-    'Alex',
-    'alex.validation@example.com',
-    'Checking required-field validation.',
+    assessmentData.contact.validation.forename,
+    assessmentData.contact.validation.email,
+    assessmentData.contact.validation.message,
   );
 
-  for (const field of ['Forename', 'Email', 'Message'] as const) {
+  for (const field of assessmentData.contact.requiredFields) {
     await expect(contactPage.requiredError(field)).toHaveCount(0);
   }
 });
 
-test('TC2 - successful contact submission', async ({ page }, testInfo) => {
-  const forename = `Planit${testInfo.repeatEachIndex}`;
+test('TC2 - successful contact submission', async ({ page, assessmentData }, testInfo) => {
+  const submissionData = assessmentData.contact.submission;
+  const forename = `${submissionData.forenamePrefix}${testInfo.repeatEachIndex}`;
+  const email = `${submissionData.emailPrefix}${testInfo.repeatEachIndex}@${submissionData.emailDomain}`;
   const homePage = new JupiterHomePage(page);
   await homePage.goto();
   await homePage.openContactPage();
@@ -36,25 +41,23 @@ test('TC2 - successful contact submission', async ({ page }, testInfo) => {
   const contactPage = new JupiterContactPage(page);
   await contactPage.fillMandatoryFields(
     forename,
-    `planit${testInfo.repeatEachIndex}@example.com`,
-    'Submitting the Planit automation assessment form.',
+    email,
+    submissionData.message,
   );
   await contactPage.submit();
 
-  await expect(contactPage.successMessage(forename)).toBeVisible({ timeout: 15_000 });
+  await expect(contactPage.successMessage(forename)).toBeVisible({
+    timeout: submissionData.successTimeoutMs,
+  });
 });
 
-test('TC3 - cart prices, product subtotals, and total are correct', async ({ page }) => {
+test('TC3 - cart prices, product subtotals, and total are correct', async ({ page, assessmentData }) => {
   const homePage = new JupiterHomePage(page);
   await homePage.goto();
   await homePage.openShopPage();
 
   const shopPage = new JupiterShopPage(page);
-  const expectedProducts = [
-    { name: 'Stuffed Frog', quantity: 2, price: '$10.99' },
-    { name: 'Fluffy Bunny', quantity: 5, price: '$9.99' },
-    { name: 'Valentine Bear', quantity: 3, price: '$14.99' },
-  ];
+  const expectedProducts = assessmentData.cart.products;
 
   for (const product of expectedProducts) {
     await shopPage.addProduct(product.name, product.quantity);
