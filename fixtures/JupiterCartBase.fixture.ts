@@ -31,7 +31,7 @@ type AssessmentFixtures = {
 };
 
 const assessmentData = JSON.parse(
-  readFileSync(new URL('../../Testdata/JupiterCartTestdata.json', import.meta.url), 'utf8'),
+  readFileSync(new URL('../Testdata/JupiterCartTestdata.json', import.meta.url), 'utf8'),
 ) as AssessmentTestData;
 
 export const test = base.extend<AssessmentFixtures>({

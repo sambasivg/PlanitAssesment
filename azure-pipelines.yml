@@ -14,7 +14,7 @@ pool:
   vmImage: "ubuntu-latest"
 
 variables:
-  NODE_VERSION: "20.x"
+  NODE_VERSION: "22.x"
   PLANIT_BASE_URL: "https://jupiter.cloud.planittesting.com"
 
 steps:
@@ -28,6 +28,9 @@ steps:
 
   - script: npx playwright install --with-deps chromium
     displayName: "Install Chromium"
+
+  - script: npm run lint
+    displayName: "Lint assessment"
 
   - script: npm run typecheck
     displayName: "Typecheck assessment"

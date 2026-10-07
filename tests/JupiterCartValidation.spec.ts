@@ -1,8 +1,8 @@
-import { expect, test } from '../fixtures/assessment.fixture';
-import { JupiterCartPage } from '../../src/pages/JupiterCartPage';
-import { JupiterContactPage } from '../../src/pages/JupiterContactPage';
-import { JupiterHomePage } from '../../src/pages/JupiterHomePage';
-import { JupiterShopPage } from '../../src/pages/JupiterShopPage';
+import { expect, test } from '../fixtures/JupiterCartBase.fixture';
+import { JupiterCartPage } from '../src/pages/JupiterCartPage';
+import { JupiterContactPage } from '../src/pages/JupiterContactPage';
+import { JupiterHomePage } from '../src/pages/JupiterHomePage';
+import { JupiterShopPage } from '../src/pages/JupiterShopPage';
 
 test('TC1 - required contact errors clear when mandatory fields are populated', async ({
   page,
